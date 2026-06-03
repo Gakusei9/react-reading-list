@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+    function ReadingList() {
+  const [books, setBooks] = React.useState([])
+  const [authors, setAuthors] = React.useState("")
+  const [titles, setTitles] = React.useState("")
+  const addBooks = () => {
+    if ( titles === "" || authors === "") return;
+    const newBooks = {titles, authors, read: false}
+    setBooks([...books, newBooks]);
+    setTitles("")
+    setAuthors("")
+  }
+  const deleteBooks = (indexToDelete) => {
+    setBooks(books.filter((book, index) => index !== indexToDelete))
+  }
+  const toggleRead = (indexToToggle) => {
+    setBooks(books.map((book, index) => index === indexToToggle ? {...book, read: !book.read} : book))
+  }
+  return (
+      <div>
+      <h1> Reading List </h1>
+      <input value={titles} onChange={(e) => setTitles(e.target.value)} placeholder="Type the title"/>
+      <input value={authors} onChange={(e) => setAuthors(e.target.value)} placeholder="Type the authors"/>
+      <button onClick={addBooks}> Add </button>
+      {books.length === 0 && <p> Your list is empty </p>}
+      <p> Total Book: {books.length}</p>
+      {books.map((book, index) => (
+      <div key={index}>
+          <p> <strong> {book.titles} </strong> - {book.authors} {book.read && <span> ✅ </span>} </p>
+          <button onClick={() => deleteBooks(index)}> Delete </button>
+          <button onClick={() => toggleRead(index)}> {book.read ? "Mark as unread":"Mark as read"} </button>
+      </div>
+      ))}
+      
+      </div>
+  )
+}
+const root = ReactDOM.createRoot(document.getElementById("root"))
+root.render(<ReadingList/>)
+    </script>   
+</body>
+</html>
